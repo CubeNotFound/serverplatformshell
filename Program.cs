@@ -42,6 +42,9 @@ namespace serverplatformshell
                         Console.WriteLine("Status: " + response.StatusCode);
                         Console.WriteLine(responseBody);
                     }
+                } else if (input.Equals("exit", StringComparison.OrdinalIgnoreCase))
+                {
+                    Environment.Exit(0);
                 }
             }
         }
