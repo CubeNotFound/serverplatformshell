@@ -259,10 +259,23 @@ namespace serverplatformshell
                     {
                         string url = "http://localhost:5678/servers/delete";
 
+                        string json =
+                            $"{{\"id\":\"{split[1]}\"," +
+                            $"}}";
+
                         var request = (HttpWebRequest)WebRequest.Create(url);
                         request.Method = "POST";
-                        request.Headers["Authorization"] = "Bearer " + split[1];
-                        request.ContentLength = 0; // important: no body
+                        request.Accept = "application/json";
+                        request.ContentType = "application/json";
+                        request.Headers["Authorization"] = "Bearer " + split[2];
+
+                        byte[] data = Encoding.UTF8.GetBytes(json);
+                        request.ContentLength = data.Length;
+
+                        using (var stream = request.GetRequestStream())
+                        {
+                            stream.Write(data, 0, data.Length);
+                        }
 
                         try
                         {
