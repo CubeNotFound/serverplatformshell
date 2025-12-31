@@ -157,6 +157,46 @@ namespace serverplatformshell
                             }
                         }
                     }
+                } else if (input.StartsWith("getservers", StringComparison.OrdinalIgnoreCase))
+                {
+                    string[] split = SplitArgsPreserveQuotes(input);
+
+                    if (split.Length < 2 || split.Length > 2)
+                    {
+                        Console.WriteLine("ERROR! Usage: GETSERVERS <token>");
+                    }
+                    else
+                    {
+                        string url = "http://localhost:5678/profile/servers";
+
+                        var request = (HttpWebRequest)WebRequest.Create(url);
+                        request.Method = "GET";
+                        request.Headers["Authorization"] = "Bearer " + split[1];
+                        request.ContentLength = 0; // important: no body
+
+                        try
+                        {
+                            using (var response = (HttpWebResponse)request.GetResponse())
+                            using (var reader = new StreamReader(response.GetResponseStream()))
+                            {
+                                Console.WriteLine(reader.ReadToEnd());
+                            }
+                        }
+                        catch (WebException ex)
+                        {
+                            if (ex.Response != null)
+                            {
+                                using (var reader = new StreamReader(ex.Response.GetResponseStream()))
+                                {
+                                    Console.WriteLine(reader.ReadToEnd());
+                                }
+                            }
+                            else
+                            {
+                                Console.WriteLine(ex.Message);
+                            }
+                        }
+                    }
                 } else if (input.Equals("clear", StringComparison.OrdinalIgnoreCase) || input.Equals("cls", StringComparison.OrdinalIgnoreCase))
                 {
                     Console.Clear();
