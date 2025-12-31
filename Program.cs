@@ -59,6 +59,56 @@ namespace serverplatformshell
                             Console.WriteLine(responseBody);
                         }
                     }
+                } else if (input.StartsWith("register", StringComparison.OrdinalIgnoreCase))
+                {
+                    string[] split = SplitArgsPreserveQuotes(input);
+
+                    if (split.Length < 3 || split.Length > 3)
+                    {
+                        Console.WriteLine("ERROR! Usage: REGISTER <username> <password>");
+                    }
+                    else
+                    {
+                        string url = "http://localhost:5678/auth/register";
+
+                        string json = $"{{\"username\":\"{split[1]}\",\"password\":\"{split[2]}\"}}";
+
+                        var request = (HttpWebRequest)WebRequest.Create(url);
+                        request.Method = "POST";
+                        request.Accept = "application/json";
+                        request.ContentType = "application/json";
+
+                        byte[] data = Encoding.UTF8.GetBytes(json);
+                        request.ContentLength = data.Length;
+
+                        using (var stream = request.GetRequestStream())
+                        {
+                            stream.Write(data, 0, data.Length);
+                        }
+
+                        try
+                        {
+                            using (var response = (HttpWebResponse)request.GetResponse())
+                            using (var reader = new StreamReader(response.GetResponseStream()))
+                            {
+                                Console.WriteLine(reader.ReadToEnd());
+                            }
+                        }
+                        catch (WebException ex)
+                        {
+                            if (ex.Response != null)
+                            {
+                                using (var reader = new StreamReader(ex.Response.GetResponseStream()))
+                                {
+                                    Console.WriteLine(reader.ReadToEnd());
+                                }
+                            }
+                            else
+                            {
+                                Console.WriteLine(ex.Message);
+                            }
+                        }
+                    }
                 } else if (input.StartsWith("create", StringComparison.OrdinalIgnoreCase))
                 {
                     string[] split = SplitArgsPreserveQuotes(input);
