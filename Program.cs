@@ -21,6 +21,8 @@ namespace serverplatformshell
             Console.ForegroundColor = ConsoleColor.Gray;
             Console.WriteLine("CubeNotFound's Server Platform Shell");
 
+            string endpointurl = "http://localhost:5678";
+
             while (true)
             {
                 Console.WriteLine("");
@@ -36,7 +38,7 @@ namespace serverplatformshell
                         Console.WriteLine("ERROR! Usage: LOGIN <username> <password>");
                     } else
                     {
-                        var url = "http://localhost:5678/auth/login";
+                        var url = endpointurl+"/auth/login";
                         var json = $"{{\"username\":\"{split[1]}\",\"password\":\"{split[2]}\"}}";
 
                         var request = (HttpWebRequest)WebRequest.Create(url);
@@ -69,7 +71,7 @@ namespace serverplatformshell
                     }
                     else
                     {
-                        string url = "http://localhost:5678/auth/register";
+                        string url = endpointurl+"/auth/register";
 
                         string json = $"{{\"username\":\"{split[1]}\",\"password\":\"{split[2]}\"}}";
 
@@ -118,7 +120,7 @@ namespace serverplatformshell
                         Console.WriteLine("ERROR! Usage: CREATE <name> <description> <software> <version> <minimum RAM> <maximum RAM> <Java version> <Java vendor> <Java type> <token>");
                     } else
                     {
-                        string url = "http://localhost:5678/servers/create";
+                        string url = endpointurl+"/servers/create";
 
                         string json =
                             $"{{\"serverName\":\"{split[1]}\"," +
@@ -177,7 +179,7 @@ namespace serverplatformshell
                         Console.WriteLine("ERROR! Usage: LOGOUT <token>");
                     } else
                     {
-                        string url = "http://localhost:5678/auth/logout";
+                        string url = endpointurl+"/auth/logout";
 
                         var request = (HttpWebRequest)WebRequest.Create(url);
                         request.Method = "POST";
@@ -217,7 +219,7 @@ namespace serverplatformshell
                     }
                     else
                     {
-                        string url = "http://localhost:5678/profile/servers";
+                        string url = endpointurl+"/profile/servers";
 
                         var request = (HttpWebRequest)WebRequest.Create(url);
                         request.Method = "GET";
@@ -257,7 +259,7 @@ namespace serverplatformshell
                     }
                     else
                     {
-                        string url = "http://localhost:5678/servers/start";
+                        string url = endpointurl+"/servers/start";
 
                         string json =
                             $"{{\"id\":\"{split[1]}\"," +
@@ -310,7 +312,7 @@ namespace serverplatformshell
                     }
                     else
                     {
-                        string url = "http://localhost:5678/servers/stop";
+                        string url = endpointurl+"/servers/stop";
 
                         string json =
                             $"{{\"id\":\"{split[1]}\"," +
@@ -363,7 +365,7 @@ namespace serverplatformshell
                     }
                     else
                     {
-                        string url = "http://localhost:5678/servers/delete";
+                        string url = endpointurl+"/servers/delete";
 
                         string json =
                             $"{{\"id\":\"{split[1]}\"," +
