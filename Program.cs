@@ -300,6 +300,59 @@ namespace serverplatformshell
                             }
                         }
                     }
+                } else if (input.StartsWith("stopserver", StringComparison.OrdinalIgnoreCase))
+                {
+                    string[] split = SplitArgsPreserveQuotes(input);
+
+                    if (split.Length < 3 || split.Length > 3)
+                    {
+                        Console.WriteLine("ERROR! Usage: STOPSERVER <server ID> <token>");
+                    }
+                    else
+                    {
+                        string url = "http://localhost:5678/servers/stop";
+
+                        string json =
+                            $"{{\"id\":\"{split[1]}\"," +
+                            $"}}";
+
+                        var request = (HttpWebRequest)WebRequest.Create(url);
+                        request.Method = "POST";
+                        request.Accept = "application/json";
+                        request.ContentType = "application/json";
+                        request.Headers["Authorization"] = "Bearer " + split[2];
+
+                        byte[] data = Encoding.UTF8.GetBytes(json);
+                        request.ContentLength = data.Length;
+
+                        using (var stream = request.GetRequestStream())
+                        {
+                            stream.Write(data, 0, data.Length);
+                        }
+
+                        try
+                        {
+                            using (var response = (HttpWebResponse)request.GetResponse())
+                            using (var reader = new StreamReader(response.GetResponseStream()))
+                            {
+                                Console.WriteLine(reader.ReadToEnd());
+                            }
+                        }
+                        catch (WebException ex)
+                        {
+                            if (ex.Response != null)
+                            {
+                                using (var reader = new StreamReader(ex.Response.GetResponseStream()))
+                                {
+                                    Console.WriteLine(reader.ReadToEnd());
+                                }
+                            }
+                            else
+                            {
+                                Console.WriteLine(ex.Message);
+                            }
+                        }
+                    }
                 } else if (input.StartsWith("deleteserver", StringComparison.OrdinalIgnoreCase))
                 {
                     string[] split = SplitArgsPreserveQuotes(input);
