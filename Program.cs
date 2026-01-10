@@ -111,6 +111,18 @@ namespace serverplatformshell
                             }
                         }
                     }
+                } else if (input.StartsWith("endpoint", StringComparison.OrdinalIgnoreCase))
+                {
+                    string[] split = SplitArgsPreserveQuotes(input);
+
+                    if (split.Length < 2 || split.Length > 2)
+                    {
+                        Console.WriteLine("ERROR! Usage: ENDPOINT <base URL>");
+                    }
+                    else
+                    {
+                        endpointurl = split[1];
+                    }
                 } else if (input.StartsWith("create", StringComparison.OrdinalIgnoreCase))
                 {
                     string[] split = SplitArgsPreserveQuotes(input);
